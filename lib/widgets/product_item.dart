@@ -17,7 +17,9 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    // print('I am rebuild'); todo: to void rebuild whole page make listen: false and wrap the IconBUtton with Consumer
+    print('I am no build after consumer');
+    final product = Provider.of<Product>(context, listen: false);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: product.id);
@@ -31,18 +33,19 @@ class ProductItem extends StatelessWidget {
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
-            leading: Consumer<Product>(
-              builder: (ctx, product, _) => IconButton(
-                onPressed: () {
-                  product.toggleFavoriteStatus();
-                },
-                icon: Icon(
-                  product.isFavorite 
-                  ? Icons.favorite_outlined
-                  : Icons.favorite_border_outlined
-                  ,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+            leading:  Consumer<Product>(
+              builder: (ctx, product, _) =>IconButton(
+                  onPressed: () {
+                    product.toggleFavoriteStatus();
+                  },
+                  icon: Icon(
+                    product.isFavorite 
+                    ? Icons.favorite_outlined
+                    : Icons.favorite_border_outlined
+                    ,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                
               ),
             ),
             title: Text(
