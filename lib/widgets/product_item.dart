@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/models/product.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -18,8 +19,9 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print('I am rebuild'); todo: to void rebuild whole page make listen: false and wrap the IconBUtton with Consumer
-    print('I am no build after consumer');
+    // print('I am no build after consumer');
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: product.id);
@@ -53,7 +55,9 @@ class ProductItem extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             trailing: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                cart.addItem(product.id, product.title, product.price,);
+              },
               icon: Icon(
                 Icons.shopping_cart_outlined,
                 color: Theme.of(context).colorScheme.secondary,
