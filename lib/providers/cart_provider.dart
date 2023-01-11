@@ -9,6 +9,15 @@ class CartProvider with ChangeNotifier {
     return _cartItems.length;
   }
 
+  //for calculate total amount
+  double get totalAmount{
+    var total = 0.0;
+    _cartItems.forEach((key, cartItem) { 
+      total += cartItem.price * cartItem.quantity;
+    });
+    return total;
+  }
+
   void addItem(String productId, String title, double price) {
     if (_cartItems.containsKey(productId)) {
       _cartItems.update(
