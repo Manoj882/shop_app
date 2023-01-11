@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shop_app/models/cart_item_model.dart';
 
 class CartProvider with ChangeNotifier {
-  final Map<String, CartItem> _cartItems = {};
+  Map<String, CartItem> _cartItems = {};
   Map<String, CartItem> get cartItems => {..._cartItems};
 
   int get itemCount{
@@ -45,6 +45,11 @@ class CartProvider with ChangeNotifier {
 
   void removeItem(String productId){
     _cartItems.remove(productId);
+    notifyListeners();
+  }
+
+  void clear(){
+    _cartItems = {};
     notifyListeners();
   }
 }
