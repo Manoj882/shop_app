@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/widgets/product_item.dart';
 
+import '../models/product.dart';
+
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid({super.key});
 
@@ -19,10 +21,13 @@ class ProductsGrid extends StatelessWidget {
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
       ),
-      itemBuilder: (ctx, i) => ProductItem(
-        id: products[i].id,
-        title: products[i].title,
-        imageUrl: products[i].imageUrl,
+      itemBuilder: (ctx, i) => ChangeNotifierProvider(
+        create: (ct) => products[i],
+        child: ProductItem(
+          // id: products[i].id,
+          // title: products[i].title,
+          // imageUrl: products[i].imageUrl,
+        ),
       ),
     );
   }
