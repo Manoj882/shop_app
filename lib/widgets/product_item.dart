@@ -24,7 +24,8 @@ class ProductItem extends StatelessWidget {
     final cart = Provider.of<CartProvider>(context, listen: false);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: product.id);
+        Navigator.of(context)
+            .pushNamed(ProductDetailScreen.routeName, arguments: product.id);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -35,19 +36,17 @@ class ProductItem extends StatelessWidget {
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
-            leading:  Consumer<Product>(
-              builder: (ctx, product, _) =>IconButton(
-                  onPressed: () {
-                    product.toggleFavoriteStatus();
-                  },
-                  icon: Icon(
-                    product.isFavorite 
-                    ? Icons.favorite_outlined
-                    : Icons.favorite_border_outlined
-                    ,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                
+            leading: Consumer<Product>(
+              builder: (ctx, product, _) => IconButton(
+                onPressed: () {
+                  product.toggleFavoriteStatus();
+                },
+                icon: Icon(
+                  product.isFavorite
+                      ? Icons.favorite_outlined
+                      : Icons.favorite_border_outlined,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
             title: Text(
@@ -56,7 +55,24 @@ class ProductItem extends StatelessWidget {
             ),
             trailing: IconButton(
               onPressed: () {
-                cart.addItem(product.id, product.title, product.price,);
+                cart.addItem(
+                  product.id,
+                  product.title,
+                  product.price,
+                );
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Added item to cart'),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(
+                      label: 'UNDO',
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      },
+                    ),
+                  ),
+                );
               },
               icon: Icon(
                 Icons.shopping_cart_outlined,
