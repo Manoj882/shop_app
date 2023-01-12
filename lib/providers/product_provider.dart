@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shop_app/models/product.dart';
 
-class ProductProvider with ChangeNotifier{
+class ProductProvider with ChangeNotifier {
   final List<Product> _items = [
     Product(
       id: 'p1',
@@ -58,23 +58,28 @@ class ProductProvider with ChangeNotifier{
   // }
 
   List<Product> get items {
-      return [..._items];
+    return [..._items];
   }
 
   //for favorite items
-  List<Product> get favoriteItems{
+  List<Product> get favoriteItems {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  
-
-  
-  void addProduct(){
-    // _items.add(value)
+  void addProduct(Product product) {
+    final newProduct = Product(
+      id: DateTime.now().toString(),
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    );
+    _items.add(newProduct);
+    // _items.insert(0, newProduct); //we can add product this way also
     notifyListeners();
   }
 
-  Product findById(String id){
+  Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
 }
