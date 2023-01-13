@@ -95,6 +95,9 @@ class ProductProvider with ChangeNotifier {
       _items.add(newProduct);
       // _items.insert(0, newProduct); //we can add product this way also
       notifyListeners();
+    }).catchError((error){
+      print(error);
+      throw error;
     });
 
   }
