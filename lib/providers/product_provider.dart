@@ -83,18 +83,20 @@ class ProductProvider with ChangeNotifier {
           'isFavorite': product.isFavorite,
         },
       ),
-    );
+    ).then((response) {
+      print(json.decode(response.body));
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      // _items.insert(0, newProduct); //we can add product this way also
+      notifyListeners();
+    });
 
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
-    // _items.insert(0, newProduct); //we can add product this way also
-    notifyListeners();
   }
 
   void updateProduct(String id, Product newProduct) {
