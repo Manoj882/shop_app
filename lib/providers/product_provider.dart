@@ -69,36 +69,43 @@ class ProductProvider with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async{
     final url = Uri.parse(
         'https://my-shop-app-1d310-default-rtdb.firebaseio.com/products.json');
-    return http.post(
-      url,
-      body: json.encode(
-        {
-          'title': product.title,
-          'price': product.price,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
-        },
-      ),
-    ).then((response) {
-      // print(json.decode(response.body));
-      final newProduct = Product(
-        id: json.decode(response.body)['name'],
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl,
-      );
-      _items.add(newProduct);
-      // _items.insert(0, newProduct); //we can add product this way also
-      notifyListeners();
-    }).catchError((error){
-      print(error);
-      throw error;
-    });
+
+        try{
+            final response = await http.post(
+            url,
+            body: json.encode(
+              {
+                'title': product.title,
+                'price': product.price,
+                'description': product.description,
+                'imageUrl': product.imageUrl,
+                'isFavorite': product.isFavorite,
+              },
+            ),
+          );
+
+          // print(json.decode(response.body));
+          final newProduct = Product(
+            id: json.decode(response.body)['name'],
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            imageUrl: product.imageUrl,
+          );
+          _items.add(newProduct);
+          // _items.insert(0, newProduct); //we can add product this way also
+          notifyListeners();
+
+        } catch (error){
+          print(error);
+          throw error;
+        }
+    
+      
+    
 
   }
 
