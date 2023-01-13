@@ -69,10 +69,10 @@ class ProductProvider with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final url = Uri.parse(
         'https://my-shop-app-1d310-default-rtdb.firebaseio.com/products.json');
-    http.post(
+    return http.post(
       url,
       body: json.encode(
         {
@@ -84,7 +84,7 @@ class ProductProvider with ChangeNotifier {
         },
       ),
     ).then((response) {
-      print(json.decode(response.body));
+      // print(json.decode(response.body));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         title: product.title,
