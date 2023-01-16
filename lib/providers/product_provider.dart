@@ -69,6 +69,19 @@ class ProductProvider with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
+  Future<void> fetchAndSetProduct() async{
+    final url = Uri.parse('https://my-shop-app-1d310-default-rtdb.firebaseio.com/products.json');
+    try{
+      final response = await http.get(url);
+      print(json.decode(response.body));
+
+    } catch(error){
+      print(error);
+      throw (error);
+    }
+
+  }
+
   Future<void> addProduct(Product product) async{
     final url = Uri.parse(
         'https://my-shop-app-1d310-default-rtdb.firebaseio.com/products.json');
