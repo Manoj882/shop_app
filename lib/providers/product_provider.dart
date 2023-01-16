@@ -85,6 +85,7 @@ class ProductProvider with ChangeNotifier {
             description: productData['description'],
             price: productData['price'],
             imageUrl: productData['imageUrl'],
+            isFavorite: productData['isFavorite'],
           ),
         );
       });
