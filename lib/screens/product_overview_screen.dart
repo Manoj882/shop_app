@@ -23,10 +23,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorites = false;
 
   var _isInit = true;
+  var _isLoading = false;
 
   // @override
   // void initState() {
-  //   // //Approach 1: for fetch data 
+  //   // //Approach 1: for fetch data
   //   // Provider.of<ProductProvider>(context, listen: false).fetchAndSetProduct();
 
   //   //Approach 2: for fetch data
@@ -39,11 +40,18 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   //Approach 3: for fetch data
   @override
   void didChangeDependencies() {
-    if(_isInit){
-      Provider.of<ProductProvider>(context).fetchAndSetProduct();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductProvider>(context).fetchAndSetProduct().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
     _isInit = false;
-    
+
     super.didChangeDependencies();
   }
 
@@ -83,20 +91,24 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               child: ch!,
             ),
             child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                },
-                icon: Icon(
-                  Icons.shopping_cart_outlined,
-                ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+              icon: Icon(
+                Icons.shopping_cart_outlined,
               ),
+            ),
           ),
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(
-        showFavs: _showOnlyFavorites,
-      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator.adaptive(),
+            )
+          : ProductsGrid(
+              showFavs: _showOnlyFavorites,
+            ),
     );
   }
 }
