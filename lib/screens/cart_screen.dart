@@ -5,10 +5,16 @@ import 'package:shop_app/providers/order_provider.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
   const CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isLoading = false;
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -43,17 +49,30 @@ class CartScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Provider.of<OrderProvider>(context, listen: false).addOrder(
-                        cart.cartItems.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clear();
-                    },
-                    child: Text(
-                      'Order Now',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
+                    onPressed: cart.totalAmount <= 0 || _isLoading
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await Provider.of<OrderProvider>(context,
+                                    listen: false)
+                                .addOrder(
+                              cart.cartItems.values.toList(),
+                              cart.totalAmount,
+                            );
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            cart.clear();
+                          },
+                    child: _isLoading
+                        ? const CircularProgressIndicator.adaptive()
+                        : Text(
+                            'Order Now',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          ),
                   ),
                 ],
               ),
